@@ -28,6 +28,7 @@ class CustomRequester:
         print("HEADERS:", self.session.headers)
         response = self.session.request(method, url, json=data, params=params, **kwargs)
 
+
         if need_logging:
             self.log_request_and_response(response)
 
@@ -38,7 +39,7 @@ class CustomRequester:
 
         return response
 
-    def _update_session_headers(self, headers: dict):
+    def update_session_headers(self, headers: dict):
         self.session.headers.update(headers)
 
     def _reset_headers(self):

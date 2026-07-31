@@ -44,4 +44,4 @@ class AuthApi(CustomRequester):
         if "accessToken" not in response:
             raise KeyError("token is missing")
         token = response["accessToken"]
-        self._update_session_headers({"authorization": "Bearer " + token})
+        self.update_session_headers({"authorization": "Bearer " + token})

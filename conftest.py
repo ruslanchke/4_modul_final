@@ -53,3 +53,40 @@ def authenticated_user(api_manager, test_user):
         **test_user,
         "id": response_data["id"]
     }
+
+@pytest.fixture
+def movie(authenticated_user, api_manager):
+
+    movie_data = DataGenerator.generate_movie_data()
+
+    response = api_manager.movies_api.create_movie(movie_data)
+
+    return response.json()
+
+@pytest.fixture(scope="function")
+def admin_user(api_manager):
+
+    user_data = {
+        "email": "api1@gmail.com",
+        "password": "asdqwe123Q"
+    }
+
+    api_manager.auth_api.authenticate(
+        (
+            user_data["email"],
+            user_data["password"]
+        )
+    )
+
+    return user_data
+
+@pytest.fixture
+def auth_api(api_manager):
+    return api_manager.auth_api
+
+@pytest.fixture
+def login_data():
+    return {
+        "email": "api1@gmail.com",
+        "password": "asdqwe123Q"
+    }
