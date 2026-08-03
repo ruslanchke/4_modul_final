@@ -66,6 +66,32 @@ def movie(authenticated_user, api_manager):
 
     return response.json()
 
+@pytest.fixture
+def movie_factory(admin_user, api_manager):
+
+    created_movies = []
+
+    def _create_movie(**kwargs):
+
+        movie_data = DataGenerator.generate_movie_data(
+            **kwargs
+        )
+
+        response = api_manager.movies_api.create_movie(movie_data)
+
+        assert response.status_code == 201
+
+        movie = response.json()
+
+        created_movies.append(movie["id"])
+
+        return movie
+
+    yield _create_movie
+
+    for movie_id in created_movies:
+        api_manager.movies_api.delete_movie(movie_id)
+
 @pytest.fixture(scope="function")
 def admin_user(api_manager):
 
