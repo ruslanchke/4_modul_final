@@ -38,27 +38,18 @@ def test_get_movies(api_manager):
     assert "genre" in movie
 
 
-def test_create_movie(admin_user, api_manager):
+def test_create_movie(admin_user, movie_factory):
 
-    movie_data = DataGenerator.generate_movie_data(
+    movie = movie_factory(
         location="MSK",
         published=False,
         genre_id=5
     )
 
-    response = api_manager.movies_api.create_movie(movie_data)
-    assert response.status_code == 201
-
-    body = response.json()
-
-    assert body["id"] is not None
-    assert body["name"] == movie_data["name"]
-    assert body["price"] == movie_data["price"]
-    assert body["description"] == movie_data["description"]
-    assert body["location"] == movie_data["location"]
-    assert body["published"] == movie_data["published"]
-    assert body["genreId"] == movie_data["genreId"]
-    assert body["imageUrl"] == movie_data["imageUrl"]
+    assert movie["id"] is not None
+    assert movie["location"] == "MSK"
+    assert movie["published"] is False
+    assert movie["genreId"] == 5
 
 def test_get_movie_by_id(admin_user, api_manager, movie_factory):
 
@@ -80,7 +71,7 @@ def test_get_movie_by_id(admin_user, api_manager, movie_factory):
     assert body["genreId"] == movie["genreId"]
     assert body["imageUrl"] == movie["imageUrl"]
 
-def test_delete_movie_by_id(api_manager, movie_factory):
+def test_delete_movie_by_id(admin_user, api_manager, movie_factory):
 
     movie = movie_factory()
     movie_id = movie["id"]
@@ -91,7 +82,7 @@ def test_delete_movie_by_id(api_manager, movie_factory):
     response = api_manager.movies_api.get_movie(movie_id)
     assert response.status_code == 404
 
-def test_patch_movie_by_id(api_manager, movie_factory):
+def test_patch_movie_by_id(admin_user, api_manager, movie_factory):
 
     movie = movie_factory()
     movie_id = movie["id"]

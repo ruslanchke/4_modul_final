@@ -90,7 +90,8 @@ def movie_factory(admin_user, api_manager):
     yield _create_movie
 
     for movie_id in created_movies:
-        api_manager.movies_api.delete_movie(movie_id)
+        response = api_manager.movies_api.delete_movie(movie_id)
+        assert response.status_code in [200, 404]
 
 @pytest.fixture(scope="function")
 def admin_user(api_manager):
