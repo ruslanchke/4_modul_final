@@ -171,3 +171,13 @@ def common_user(user_session, super_admin, creation_user_data):
     super_admin.api.user_api.create_user(creation_user_data)
     common_user.api.auth_api.authenticate(common_user.creds)
     return common_user
+
+@pytest.fixture
+def unauthenticated_api_manager():
+    session = requests.Session()
+
+    api_manager = ApiManager(session)
+
+    yield api_manager
+
+    session.close()
