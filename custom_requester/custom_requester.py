@@ -21,7 +21,7 @@ class CustomRequester:
 
         self.logger = logging.getLogger(__name__)
 
-    def send_request(self, method, endpoint, data=None, params=None, expected_status=200, need_logging=True, **kwargs):
+    def send_request(self, method, endpoint, data=None, params=None, need_logging=True, **kwargs):
         url = f"{self.base_url}{endpoint}"
         print("METHOD:", method)
         print("URL:", url)
@@ -31,11 +31,6 @@ class CustomRequester:
 
         if need_logging:
             self.log_request_and_response(response)
-
-        if response.status_code != expected_status:
-            raise ValueError(
-                f"Unexpected status code: {response.status_code}. Expected: {expected_status}"
-            )
 
         return response
 
