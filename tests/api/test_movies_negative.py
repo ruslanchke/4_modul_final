@@ -9,11 +9,19 @@ def test_create_movie_without_name(api_manager, admin_user):
         expected_status=400
     )
 
+    body = response.json()
+
+    assert "name should not be empty" in body["message"]
+
 def test_get_movie_by_invalid_id(api_manager, admin_user):
     response = api_manager.movies_api.get_movie(
         movie_id=999999999,
         expected_status=404
     )
+
+    body = response.json()
+
+    assert body["statusCode"] == 404
 
 
 def test_create_movie_without_token(api_manager):
