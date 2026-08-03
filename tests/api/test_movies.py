@@ -40,14 +40,18 @@ def test_get_movies(api_manager):
 
 def test_create_movie(admin_user, api_manager):
 
-    movie_data = DataGenerator.generate_movie_data()
+    movie_data = DataGenerator.generate_movie_data(
+        location="MSK",
+        published=False,
+        genre_id=5
+    )
 
     response = api_manager.movies_api.create_movie(movie_data)
     assert response.status_code == 201
 
     body = response.json()
 
-    assert body["id"] != ""
+    assert body["id"] is not None
     assert body["name"] == movie_data["name"]
     assert body["price"] == movie_data["price"]
     assert body["description"] == movie_data["description"]
