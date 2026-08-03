@@ -58,11 +58,13 @@ def authenticated_user(api_manager, test_user):
     }
 
 @pytest.fixture
-def movie(authenticated_user, api_manager):
+def movie(super_admin):
 
     movie_data = DataGenerator.generate_movie_data()
 
-    response = api_manager.movies_api.create_movie(movie_data)
+    response = super_admin.api.movies_api.create_movie(movie_data)
+
+    assert response.status_code == 201
 
     return response.json()
 

@@ -5,6 +5,7 @@ USER = '/user'
 
 
 class UserApi(CustomRequester):
+
     def __init__(self, session):
         super().__init__(session=session, base_url=AUTH_BASE_URL)
 
@@ -26,18 +27,16 @@ class UserApi(CustomRequester):
         for user_id in user_ids:
             self.delete_user(user_id, **kwargs)
 
-    USER_BASE_URL = "https://auth.dev-cinescope.coconutqa.ru/"
-
     def get_user(self, user_locator, **kwargs):
         return self.send_request(
             "GET",
-            f"user/{user_locator}",
+            f"/user/{user_locator}",
             **kwargs
         )
 
     def create_user(self, user_data,):
         return self.send_request(
             method="POST",
-            endpoint="user",
+            endpoint="/user",
             data=user_data,
         )
