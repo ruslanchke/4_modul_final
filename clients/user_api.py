@@ -27,3 +27,26 @@ class UserApi(CustomRequester):
     def delete_users(self, *user_ids, **kwargs):
         for user_id in user_ids:
             self.delete_user(user_id, **kwargs)
+
+class UserApi(CustomRequester):
+    USER_BASE_URL = "https://auth.dev-cinescope.coconutqa.ru/"
+
+    def __init__(self, session):
+        self.session = session
+        super().__init__(session, self.USER_BASE_URL)
+
+    def get_user(self, user_locator, expected_status=200, **kwargs):
+        return self.send_request(
+            "GET",
+            f"user/{user_locator}",
+            expected_status=expected_status,
+            **kwargs
+        )
+
+    def create_user(self, user_data, expected_status=201):
+        return self.send_request(
+            method="POST",
+            endpoint="user",
+            data=user_data,
+            expected_status=expected_status
+        )

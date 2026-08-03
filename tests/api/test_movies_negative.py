@@ -15,4 +15,49 @@ def test_get_movie_by_invalid_id(api_manager, admin_user):
         expected_status=404
     )
 
-    assert response.status_code == 404
+
+def test_create_movie_without_token(api_manager):
+    movie_data = DataGenerator.generate_movie_data()
+
+    api_manager.movies_api.create_movie(
+        movie_data,
+        expected_status=401
+    )
+
+def test_common_user_cannot_create_movie(common_user):
+    movie_data = DataGenerator.generate_movie_data()
+
+    common_user.api.movies_api.create_movie(
+        movie_data,
+        expected_status=403
+    )
+
+def test_common_user_cannot_delete_movie(super_admin, common_user):
+
+    movie_data = DataGenerator.generate_movie_data()
+
+    response = super_admin.api.movies_api.create_movie(movie_data)
+    assert response.status_code == 201
+
+    movie_id = response.json()["id"]
+
+    common_user.api.movies_api.delete_movie(
+        movie_id,
+        expected_status=403
+    )
+
+def test_delete_movie_without_token(super_admin, user_session):
+
+    movie_data = DataGenerator.generate_movie_data()
+
+    response = super_admin.api.movies_api.create_movie(movie_data)
+    assert response.status_code == 201
+
+    movie_id = response.json()["id"]
+
+    api = user_session()
+
+    api.movies_api.delete_movie(
+        movie_id,
+        expected_status=401
+    )
