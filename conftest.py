@@ -96,8 +96,8 @@ def movie_factory(admin_user, api_manager):
 def admin_user(api_manager):
 
     user_data = {
-        "email": "api1@gmail.com",
-        "password": "asdqwe123Q"
+        "email": SuperAdminCreds.USERNAME,
+        "password": SuperAdminCreds.PASSWORD
     }
 
     api_manager.auth_api.authenticate(
@@ -116,8 +116,8 @@ def auth_api(api_manager):
 @pytest.fixture
 def login_data():
     return {
-        "email": "api1@gmail.com",
-        "password": "asdqwe123Q"
+        "email": SuperAdminCreds.USERNAME,
+        "password": SuperAdminCreds.PASSWORD
     }
 
 @pytest.fixture

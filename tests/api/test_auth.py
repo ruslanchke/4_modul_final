@@ -1,5 +1,6 @@
 import requests
 import pytest
+from resources.user_creds import SuperAdminCreds
 from custom_requester.custom_requester import CustomRequester
 from data.auth.register_data import get_register_payload
 
@@ -56,11 +57,14 @@ def test_authenticated_user(authenticated_user):
 def test_get_user_info(api_manager):
 
     api_manager.auth_api.authenticate(
-        ("api1@gmail.com", "asdqwe123Q")
+        (
+            SuperAdminCreds.USERNAME,
+            SuperAdminCreds.PASSWORD
+        )
     )
 
-    response = api_manager.user_api.get_user_info("api1@gmail.com")
+    response = api_manager.user_api.get_user_info(SuperAdminCreds.USERNAME)
     response_data = response.json()
 
-    assert response_data["email"] == "api1@gmail.com"
+    assert response_data["email"] == SuperAdminCreds.USERNAME
 
