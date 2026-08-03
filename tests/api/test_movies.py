@@ -128,19 +128,38 @@ def test_patch_movie_by_id(api_manager, admin_user):
     assert body["genreId"] == movie_data["genreId"]
     assert body["imageUrl"] == movie_data["imageUrl"]
 
-def test_get_movies_by_location_filter(api_manager):
+def test_get_movies_by_location_filter(admin_user, api_manager):
 
-    response = api_manager.movies_api.get_movies(
-        params={
-            "locations": "SPB"
-        }
+    movie_data = DataGenerator.generate_movie_data(
+        location="SPB"
     )
 
-    assert response.status_code == 200
+    response = api_manager.movies_api.create_movie(movie_data)
 
-    body = response.json()
+    assert response.status_code == 201
 
-    assert len(body["movies"]) > 0
+    movie_id = response.json()["id"]
 
-    for movie in body["movies"]:
-        assert movie["location"] == "SPB"
+    try:
+        response = api_manager.movies_api.get_movies(
+            params={
+                "locations": "SPB",
+                "createdAt": "desc"
+            }
+        )
+
+        assert response.status_code == 200
+
+        body = response.json()
+
+        assert len(body["movies"]) > 0
+
+        created_movie = next(
+            movie for movie in body["movies"]
+            if movie["id"] == movie_id
+        )
+
+        assert created_movie["location"] == "SPB"
+
+    finally:
+        api_manager.movies_api.delete_movie(movie_id)
