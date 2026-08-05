@@ -36,9 +36,15 @@ def test_create_movie_without_token(api_manager):
 def test_common_user_cannot_create_movie(common_user):
     movie_data = DataGenerator.generate_movie_data()
 
-    common_user.api.movies_api.create_movie(
+    response = common_user.api.movies_api.create_movie(
         movie_data
     )
+    assert response.status_code == 403
+
+    response_body = response.json()
+    assert response_body["error"] == "Forbidden"
+    assert response_body["message"] == "Forbidden resource"
+
 
 def test_common_user_cannot_delete_movie(super_admin, common_user):
 
