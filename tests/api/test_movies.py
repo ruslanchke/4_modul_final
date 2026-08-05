@@ -125,7 +125,7 @@ def test_get_movies_by_location_filter(api_manager, movie_factory):
     assert response.status_code == 200
 
     body = response.json()
-    assert len(body["movies"]) > 0
+    assert isinstance(body["movies"], list)
 
     created_movie = next(
         movie_item for movie_item in body["movies"]
