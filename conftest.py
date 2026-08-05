@@ -170,9 +170,14 @@ def common_user(user_session, super_admin, creation_user_data):
         [Roles.USER.value],
         new_session)
 
-    super_admin.api.user_api.create_user(creation_user_data)
+    response = super_admin.api.user_api.create_user(creation_user_data)
+    assert response.status_code == 201
+
+    user_id = response.json()["id"]
     common_user.api.auth_api.authenticate(common_user.creds)
-    return common_user
+    yield common_user
+
+    super_admin.api.user_api.delete_user(user_id)
 
 @pytest.fixture
 def unauthenticated_api_manager():
