@@ -75,16 +75,28 @@ def test_common_user_cannot_delete_movie(super_admin, common_user):
     assert get_response.json()["id"] == movie_id
 
 def test_delete_movie_without_token(super_admin, user_session):
-
     movie_data = DataGenerator.generate_movie_data()
 
-    response = super_admin.api.movies_api.create_movie(movie_data)
-    assert response.status_code == 201
+    create_response = super_admin.api.movies_api.create_movie(movie_data)
+    assert create_response.status_code == 201
 
-    movie_id = response.json()["id"]
+    movie_id = create_response.json()["id"]
 
     api = user_session()
 
-    api.movies_api.delete_movie(
-        movie_id
-    )
+    delete_response = api.movies_api.delete_movie(movie_id)
+
+    assert delete_response.status_code == 401
+
+    body = delete_response.json()
+
+    print(delete_response.status_code)
+    print(delete_response.json())
+
+    assert body["message"] == "Unauthorized"
+    assert body["statusCode"] == 401
+
+    get_response = super_admin.api.movies_api.get_movie(movie_id)
+
+    assert get_response.status_code == 200
+    assert get_response.json()["id"] == movie_id
