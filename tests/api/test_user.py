@@ -1,10 +1,11 @@
 from utils.data_generator import DataGenerator
+from resources.user_creds import SuperAdminCreds
 
 def test_delete_users(api_manager):
     api_manager.auth_api.authenticate(
         (
-            "api1@gmail.com",
-            "asdqwe123Q"
+            SuperAdminCreds.USERNAME,
+            SuperAdminCreds.PASSWORD
         )
     )
 

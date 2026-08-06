@@ -2,6 +2,9 @@ import requests
 import pytest
 from clients.api_manager import ApiManager
 from utils.data_generator import DataGenerator
+from resources.user_creds import SuperAdminCreds
+from entities.user import User
+from entities.roles import Roles
 
 
 @pytest.fixture(scope="session")
@@ -53,3 +56,135 @@ def authenticated_user(api_manager, test_user):
         **test_user,
         "id": response_data["id"]
     }
+
+@pytest.fixture
+def movie(super_admin):
+
+    movie_data = DataGenerator.generate_movie_data()
+
+    response = super_admin.api.movies_api.create_movie(movie_data)
+
+    assert response.status_code == 201
+
+    return response.json()
+
+@pytest.fixture
+def movie_factory(admin_user, api_manager):
+
+    created_movies = []
+
+    def _create_movie(**kwargs):
+
+        movie_data = DataGenerator.generate_movie_data(
+            **kwargs
+        )
+
+        response = api_manager.movies_api.create_movie(movie_data)
+
+        assert response.status_code == 201
+
+        movie = response.json()
+
+        created_movies.append(movie["id"])
+
+        return movie
+
+    yield _create_movie
+
+    for movie_id in created_movies:
+        response = api_manager.movies_api.delete_movie(movie_id)
+        assert response.status_code in [200, 404]
+
+@pytest.fixture(scope="function")
+def admin_user(api_manager):
+
+    user_data = {
+        "email": SuperAdminCreds.USERNAME,
+        "password": SuperAdminCreds.PASSWORD
+    }
+
+    api_manager.auth_api.authenticate(
+        (
+            user_data["email"],
+            user_data["password"]
+        )
+    )
+
+    return user_data
+
+@pytest.fixture
+def auth_api(api_manager):
+    return api_manager.auth_api
+
+@pytest.fixture
+def login_data():
+    return {
+        "email": SuperAdminCreds.USERNAME,
+        "password": SuperAdminCreds.PASSWORD
+    }
+
+@pytest.fixture
+def user_session():
+    user_pool = []
+
+    def _create_user_session():
+        session = requests.Session()
+        user_session = ApiManager(session)
+        user_pool.append(user_session)
+        return user_session
+
+    yield _create_user_session
+
+    for user in user_pool:
+        user.close_session()
+
+@pytest.fixture
+def super_admin(user_session):
+    new_session = user_session()
+
+    super_admin = User(
+        SuperAdminCreds.USERNAME,
+        SuperAdminCreds.PASSWORD,
+        [Roles.SUPER_ADMIN.value],
+        new_session)
+
+    super_admin.api.auth_api.authenticate(super_admin.creds)
+    return super_admin
+
+@pytest.fixture(scope="function")
+def creation_user_data(test_user):
+    updated_data = test_user.copy()
+    updated_data.update({
+        "verified": True,
+        "banned": False
+    })
+    return updated_data
+
+@pytest.fixture
+def common_user(user_session, super_admin, creation_user_data):
+    new_session = user_session()
+
+    common_user = User(
+        creation_user_data['email'],
+        creation_user_data['password'],
+        [Roles.USER.value],
+        new_session)
+
+    response = super_admin.api.user_api.create_user(creation_user_data)
+    assert response.status_code == 201
+
+    user_id = response.json()["id"]
+    common_user.api.auth_api.authenticate(common_user.creds)
+    yield common_user
+
+    super_admin.api.user_api.delete_user(user_id)
+
+@pytest.fixture
+def unauthenticated_api_manager():
+    session = requests.Session()
+
+    api_manager = ApiManager(session)
+
+    yield api_manager
+
+    session.close()
