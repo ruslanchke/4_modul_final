@@ -1,4 +1,5 @@
 from utils.data_generator import DataGenerator
+import pytest
 
 def test_get_movies(api_manager):
 
@@ -140,3 +141,28 @@ def test_get_movies_by_location_filter(api_manager, movie_factory):
     assert created_movie["published"] == movie["published"]
     assert created_movie["genreId"] == movie["genreId"]
     assert created_movie["imageUrl"] == movie["imageUrl"]
+
+
+@pytest.mark.parametrize(
+    "params, filter_type",
+    [
+        ({"minPrice": 100, "maxPrice": 500}, "price"),
+        ({"locations": "SPB"}, "location"),
+        ({"genreId": 5}, "genreId"),
+    ]
+)
+def test_get_movies_by_filter(api_manager, params, filter_type):
+    response = api_manager.movies_api.get_movies(params=params)
+
+    assert response.status_code == 200
+
+    movies = response.json()["movies"]
+    assert movies
+
+    for movie in movies:
+        if filter_type == "price":
+            assert params["minPrice"] <= movie["price"] <= params["maxPrice"]
+        elif filter_type == "location":
+            assert movie["location"] == params["locations"]
+        elif filter_type == "genreId":
+            assert movie["genreId"] == params["genreId"]
