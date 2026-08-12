@@ -166,3 +166,20 @@ def test_get_movies_by_filter(api_manager, params, filter_type):
             assert movie["location"] == params["locations"]
         elif filter_type == "genreId":
             assert movie["genreId"] == params["genreId"]
+
+@pytest.mark.parametrize(
+    "role, expected_status",
+    [
+        ("super_admin", 200),
+        ("admin_user", 403),
+        ("common_user", 403),
+    ]
+)
+def test_delete_movie_by_role(request, movie_factory, role, expected_status):
+    movie = movie_factory()
+
+    user = request.getfixturevalue(role)
+
+    response = user.api.movies_api.delete_movie(movie["id"])
+
+    assert response.status_code == expected_status
