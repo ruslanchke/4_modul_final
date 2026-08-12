@@ -69,7 +69,7 @@ def movie(super_admin):
     return response.json()
 
 @pytest.fixture
-def movie_factory(admin_user, api_manager):
+def movie_factory(super_admin):
 
     created_movies = []
 
@@ -79,8 +79,7 @@ def movie_factory(admin_user, api_manager):
             **kwargs
         )
 
-        response = api_manager.movies_api.create_movie(movie_data)
-
+        response = super_admin.api.movies_api.create_movie(movie_data)
         assert response.status_code == 201
 
         movie = response.json()
@@ -92,25 +91,47 @@ def movie_factory(admin_user, api_manager):
     yield _create_movie
 
     for movie_id in created_movies:
-        response = api_manager.movies_api.delete_movie(movie_id)
+        response = super_admin.api.movies_api.delete_movie(movie_id)
         assert response.status_code in [200, 404]
 
-@pytest.fixture(scope="function")
-def admin_user(api_manager):
+@pytest.fixture
+def admin_user(user_session, super_admin, creation_admin_data):
+    new_session = user_session()
 
-    user_data = {
-        "email": SuperAdminCreds.USERNAME,
-        "password": SuperAdminCreds.PASSWORD
-    }
-
-    api_manager.auth_api.authenticate(
-        (
-            user_data["email"],
-            user_data["password"]
-        )
+    admin_user = User(
+        creation_admin_data["email"],
+        creation_admin_data["password"],
+        [Roles.ADMIN.value],
+        new_session
     )
 
-    return user_data
+    response = super_admin.api.user_api.create_user(creation_admin_data)
+    assert response.status_code == 201
+
+    print("ADMIN DATA:", creation_admin_data)
+    print("CREATED USER:", response.json())
+
+    user_id = response.json()["id"]
+
+    update_data = {
+        "roles": [Roles.ADMIN.value],
+        "verified": True,
+        "banned": False
+    }
+
+    response = super_admin.api.user_api.update_user(
+        user_id,
+        update_data
+    )
+    assert response.status_code == 200
+
+    print("UPDATED USER:", response.json())
+
+    admin_user.api.auth_api.authenticate(admin_user.creds)
+
+    yield admin_user
+
+    super_admin.api.user_api.delete_user(user_id)
 
 @pytest.fixture
 def auth_api(api_manager):
@@ -158,6 +179,12 @@ def creation_user_data(test_user):
         "verified": True,
         "banned": False
     })
+    return updated_data
+
+@pytest.fixture(scope="function")
+def creation_admin_data(creation_user_data):
+    updated_data = creation_user_data.copy()
+    updated_data["roles"] = [Roles.ADMIN.value]
     return updated_data
 
 @pytest.fixture
