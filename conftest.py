@@ -215,3 +215,15 @@ def unauthenticated_api_manager():
     yield api_manager
 
     session.close()
+
+@pytest.fixture
+def registration_user_data():
+    random_password = DataGenerator.generate_random_password()
+
+    return {
+        "email": DataGenerator.generate_random_email(),
+        "fullName": DataGenerator.generate_random_name(),
+        "password": random_password,
+        "passwordRepeat": random_password,
+        "roles": [Roles.USER.value]
+    }
