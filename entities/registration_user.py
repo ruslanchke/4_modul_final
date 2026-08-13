@@ -1,11 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from entities.roles import Roles
-import pytest
 
 class RegistrationUser(BaseModel):
-    email: str
+    email: str = Field(pattern=r".+@.+") #Field доп ограничение к полю #в скобках регулярное выражение
     fullName: str
-    password: str
+    password: str = Field(min_length=9)
     passwordRepeat: str
     roles: list[Roles]
     banned: bool | None = None

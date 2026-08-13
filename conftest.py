@@ -5,6 +5,7 @@ from utils.data_generator import DataGenerator
 from resources.user_creds import SuperAdminCreds
 from entities.user import User
 from entities.roles import Roles
+from models.base_models import TestUser
 
 
 @pytest.fixture(scope="session")
@@ -19,23 +20,28 @@ def api_manager(session):
     return ApiManager(session)
 
 
-@pytest.fixture(scope="function")
-def test_user():
-    password = DataGenerator.generate_random_password()
-    return {
-        "email": DataGenerator.generate_random_email(),
-        "fullName": DataGenerator.generate_random_name(),
-        "password": password,
-        "passwordRepeat": password,
-        "roles": ["USER"]
-    }
+@pytest.fixture
+def test_user() -> TestUser:
+    random_password = DataGenerator.generate_random_password()
+
+    return TestUser(
+        email=DataGenerator.generate_random_email(),
+        fullName=DataGenerator.generate_random_name(),
+        password=random_password,
+        passwordRepeat=random_password,
+        roles=[Roles.USER]
+    )
 
 
 @pytest.fixture(scope="function")
 def registered_user(api_manager, test_user):
     response = api_manager.auth_api.register_user(test_user).json()
-    test_user["id"] = response["id"]
-    return test_user
+
+    return {
+        "id": response["id"],
+        "email": response["email"],
+        "password": test_user.password
+    }
 
 @pytest.fixture(scope="function")
 def authenticated_user(api_manager, test_user):
@@ -173,13 +179,13 @@ def super_admin(user_session):
     return super_admin
 
 @pytest.fixture(scope="function")
-def creation_user_data(test_user):
-    updated_data = test_user.copy()
-    updated_data.update({
-        "verified": True,
-        "banned": False
-    })
-    return updated_data
+def creation_user_data(test_user: TestUser) -> dict:
+    return test_user.model_copy(
+        update={
+            "verified": True,
+            "banned": False
+        }
+    ).model_dump()
 
 @pytest.fixture(scope="function")
 def creation_admin_data(creation_user_data):
@@ -191,17 +197,25 @@ def creation_admin_data(creation_user_data):
 def common_user(user_session, super_admin, creation_user_data):
     new_session = user_session()
 
+    print("COMMON USER EMAIL:", creation_user_data["email"])
+
     common_user = User(
-        creation_user_data['email'],
-        creation_user_data['password'],
+        creation_user_data["email"],
+        creation_user_data["password"],
         [Roles.USER.value],
-        new_session)
+        new_session
+    )
 
     response = super_admin.api.user_api.create_user(creation_user_data)
+
+    print("STATUS:", response.status_code)
+    print("BODY:", response.text)
+
     assert response.status_code == 201
 
     user_id = response.json()["id"]
     common_user.api.auth_api.authenticate(common_user.creds)
+
     yield common_user
 
     super_admin.api.user_api.delete_user(user_id)
