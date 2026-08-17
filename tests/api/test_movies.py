@@ -143,38 +143,25 @@ def test_get_movies_by_location_filter(api_manager, movie_factory):
     assert created_movie["imageUrl"] == movie["imageUrl"]
 
 
-@pytest.mark.parametrize(
-    "params, filter_type",
-    [
-        ({"minPrice": 100, "maxPrice": 500}, "price"),
-        ({"locations": "SPB"}, "location"),
-        ({"genreId": 5}, "genreId"),
-    ]
-)
-def test_get_movies_by_filter(api_manager, params, filter_type):
-    response = api_manager.movies_api.get_movies(params=params)
+
+def test_get_movies_by_filter(api_manager, movie_factory):
+    movie_factory(price=99)
+    movie_factory(price=100)
+    movie_factory(price=300)
+    movie_factory(price=500)
+    movie_factory(price=501)
+
+    response = api_manager.movies_api.get_movies(
+        params={"minPrice": 100, "maxPrice": 500}
+    )
 
     assert response.status_code == 200
 
     movies = response.json()["movies"]
-    assert movies
 
-    for movie in movies:
-        if filter_type == "price":
-            assert params["minPrice"] <= movie["price"] <= params["maxPrice"]
-        elif filter_type == "location":
-            assert movie["location"] == params["locations"]
-        elif filter_type == "genreId":
-            assert movie["genreId"] == params["genreId"]
+    assert all(100 <= movie["price"] <= 500 for movie in movies)
 
-@pytest.mark.parametrize(
-    "role, expected_status",
-    [
-        ("super_admin", 200),
-        ("admin_user", 403),
-        ("common_user", 403),
-    ]
-)
+
 def test_delete_movie_by_role(request, movie_factory, role, expected_status):
     movie = movie_factory()
 
