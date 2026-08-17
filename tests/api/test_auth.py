@@ -1,5 +1,7 @@
 import requests
 import pytest
+
+from entities.roles import Roles
 from resources.user_creds import SuperAdminCreds
 from models.base_models import RegisterUserResponse
 
@@ -10,7 +12,12 @@ class TestAuth:
 
         assert response.status_code == 201
 
-        RegisterUserResponse.model_validate(response.json())
+        user = RegisterUserResponse.model_validate(response.json())
+
+        assert user.email == test_user.email
+        assert user.fullName == test_user.fullName
+        assert user.roles == [Roles.USER]
+        assert user.verified is True
 
     def test_register_and_login_user(self, api_manager, registered_user):
         login_data = {
