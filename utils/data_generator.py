@@ -1,3 +1,5 @@
+import uuid
+
 from faker import Faker
 
 
@@ -6,7 +8,7 @@ class DataGenerator:
 
     @staticmethod
     def generate_random_email():
-        return DataGenerator.fake.email()
+        return f"{uuid.uuid4()}@example.com"
 
     @staticmethod
     def generate_random_name():
