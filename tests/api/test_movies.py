@@ -162,6 +162,15 @@ def test_get_movies_by_filter(api_manager, movie_factory):
     assert all(100 <= movie["price"] <= 500 for movie in movies)
 
 
+@pytest.mark.parametrize(
+    "role, expected_status",
+    [
+        ("super_admin", 200),
+        ("admin_user", 403),
+        ("common_user", 403),
+    ]
+)
+
 def test_delete_movie_by_role(request, movie_factory, role, expected_status):
     movie = movie_factory()
 

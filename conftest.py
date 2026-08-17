@@ -5,7 +5,8 @@ from utils.data_generator import DataGenerator
 from resources.user_creds import SuperAdminCreds
 from entities.user import User
 from entities.roles import Roles
-from models.base_models import TestUser
+from models.base_models import TestUser, RegisterUserResponse
+from models.base_models import TestUser as TestUserModel
 
 
 @pytest.fixture(scope="session")
@@ -99,6 +100,34 @@ def movie_factory(super_admin):
     for movie_id in created_movies:
         response = super_admin.api.movies_api.delete_movie(movie_id)
         assert response.status_code in [200, 404]
+
+@pytest.fixture
+def user_factory(super_admin):
+    created_users = []
+
+    def _create_user(**kwargs):
+        password = DataGenerator.generate_random_password()
+
+        user_data = TestUserModel(
+            email=DataGenerator.generate_random_email(),
+            fullName=DataGenerator.generate_random_name(),
+            password=password,
+            passwordRepeat=password,
+            roles=[Roles.USER],
+            **kwargs
+        )
+
+        response = super_admin.api.auth_api.register_user(user_data)
+        assert response.status_code == 201
+
+        user = RegisterUserResponse.model_validate(response.json())
+        created_users.append(user.id)
+
+        return user
+
+    yield _create_user
+
+    super_admin.api.user_api.delete_users(*created_users)
 
 @pytest.fixture
 def admin_user(user_session, super_admin, creation_admin_data):
@@ -197,8 +226,6 @@ def creation_admin_data(creation_user_data):
 def common_user(user_session, super_admin, creation_user_data):
     new_session = user_session()
 
-    print("COMMON USER EMAIL:", creation_user_data["email"])
-
     common_user = User(
         creation_user_data["email"],
         creation_user_data["password"],
@@ -207,13 +234,10 @@ def common_user(user_session, super_admin, creation_user_data):
     )
 
     response = super_admin.api.user_api.create_user(creation_user_data)
-
-    print("STATUS:", response.status_code)
-    print("BODY:", response.text)
-
     assert response.status_code == 201
 
     user_id = response.json()["id"]
+
     common_user.api.auth_api.authenticate(common_user.creds)
 
     yield common_user

@@ -4,31 +4,12 @@ from models.base_models import RegisterUserResponse
 from models.base_models import TestUser as TestUserModel
 from entities.roles import Roles
 
-def test_delete_users(api_manager):
-    api_manager.auth_api.authenticate(
-        (SuperAdminCreds.USERNAME, SuperAdminCreds.PASSWORD)
+def test_delete_users(user_factory, super_admin):
+    users = [user_factory() for _ in range(3)]
+
+    super_admin.api.user_api.delete_users(
+        *(user.id for user in users)
     )
-
-    user_ids = []
-
-    for _ in range(3):
-        password = DataGenerator.generate_random_password()
-
-        user_data = TestUserModel(
-            email=DataGenerator.generate_random_email(),
-            fullName=DataGenerator.generate_random_name(),
-            password=password,
-            passwordRepeat=password,
-            roles=[Roles.USER]
-        )
-
-        response = api_manager.auth_api.register_user(user_data)
-
-        assert response.status_code == 201
-        created_user = RegisterUserResponse.model_validate(response.json())
-        user_ids.append(created_user.id)
-
-    api_manager.user_api.delete_users(*user_ids)
 
 class TestUser:
 
@@ -39,14 +20,16 @@ class TestUser:
 
         RegisterUserResponse.model_validate(response.json())
 
-    def test_get_user_by_locator(self, super_admin, creation_user_data):
-        created_user = super_admin.api.user_api.create_user(creation_user_data).json()
+    def test_get_user_by_locator(self, user_factory, super_admin):
+        created_user = user_factory()
 
         user_by_id = RegisterUserResponse.model_validate(
-            super_admin.api.user_api.get_user(created_user["id"]).json())
+            super_admin.api.user_api.get_user(created_user.id).json()
+        )
 
         user_by_email = RegisterUserResponse.model_validate(
-            super_admin.api.user_api.get_user(creation_user_data["email"]).json())
+            super_admin.api.user_api.get_user(created_user.email).json()
+        )
 
         assert user_by_id == user_by_email
 
