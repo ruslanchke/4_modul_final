@@ -40,3 +40,10 @@ class UserApi(CustomRequester):
             endpoint="/user",
             data=user_data,
         )
+
+    def update_user(self, user_id, user_data):
+        return self.send_request(
+            method="PATCH",
+            endpoint=f"/user/{user_id}",
+            data=user_data
+        )

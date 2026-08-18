@@ -25,25 +25,37 @@ def test_get_movie_by_invalid_id(api_manager, admin_user):
     assert body["statusCode"] == 404
 
 
-def test_create_movie_without_token(api_manager):
+def test_create_movie_without_token(unauthenticated_api_manager):
     movie_data = DataGenerator.generate_movie_data()
 
-    api_manager.movies_api.create_movie(
+    response = unauthenticated_api_manager.movies_api.create_movie(
         movie_data
     )
+    assert response.status_code == 401
 
 
 def test_common_user_cannot_create_movie(common_user):
     movie_data = DataGenerator.generate_movie_data()
 
-    response = common_user.api.movies_api.create_movie(
-        movie_data
-    )
+    response = common_user.api.movies_api.create_movie(movie_data)
+
     assert response.status_code == 403
 
     response_body = response.json()
     assert response_body["error"] == "Forbidden"
     assert response_body["message"] == "Forbidden resource"
+
+    movies_response = common_user.api.movies_api.get_movies()
+    assert movies_response.status_code == 200
+
+    print(movies_response.json())
+
+    movies = movies_response.json()["movies"]
+
+    assert not any(
+        movie["name"] == movie_data["name"]
+        for movie in movies
+    )
 
 
 def test_common_user_cannot_delete_movie(super_admin, common_user):
