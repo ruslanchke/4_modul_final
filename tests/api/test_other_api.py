@@ -75,35 +75,12 @@ def test_accounts_transaction_template(db_session):
         db_session.delete(bob)
         db_session.commit()
 
-def test_delete_movie(api_manager, super_admin, db_session):
-    movie_id = 71015
+def test_delete_movie(super_admin, db_session, movie_factory):
+    # Создаём фильм через фабрику
+    movie = movie_factory()
+    movie_id = movie["id"]
 
-    # 1. Проверяем, есть ли фильм в БД
-    movie = (
-        db_session.query(MovieDBModel)
-        .filter(MovieDBModel.id == movie_id)
-        .first()
-    )
-
-    # 2. Если фильма нет — создаём его напрямую в БД
-    if movie is None:
-        movie = MovieDBModel(
-            id=movie_id,
-            name="Test movie",
-            price=500,
-            description="Test movie description",
-            image_url="https://image.url",
-            location="SPB",
-            published=True,
-            rating=0,
-            genre_id=5,
-            created_at = datetime.now()
-        )
-
-        db_session.add(movie)
-        db_session.commit()
-
-    # 3. Перед удалением убеждаемся, что фильм действительно есть
+    # Проверяем, что фильм появился в БД
     movie_before_delete = (
         db_session.query(MovieDBModel)
         .filter(MovieDBModel.id == movie_id)
@@ -112,12 +89,12 @@ def test_delete_movie(api_manager, super_admin, db_session):
 
     assert movie_before_delete is not None
 
-    # 4. Удаляем фильм через API
+    # Удаляем фильм через API
     response = super_admin.api.movies_api.delete_movie(movie_id)
 
     assert response.status_code == 200
 
-    # 5. Проверяем, что фильм удалился из БД
+    # Проверяем, что фильм удалён из БД
     movie_after_delete = (
         db_session.query(MovieDBModel)
         .filter(MovieDBModel.id == movie_id)
