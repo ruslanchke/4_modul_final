@@ -22,7 +22,7 @@ class DataGenerator:
     def generate_movie_data(
             location="SPB",
             published=True,
-            genre_id=1,
+            genre_id=5,
             price=None
     ):
         return {

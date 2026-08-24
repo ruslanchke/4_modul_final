@@ -87,6 +87,7 @@ def movie_factory(super_admin):
         )
 
         response = super_admin.api.movies_api.create_movie(movie_data)
+
         assert response.status_code == 201
 
         movie = response.json()
