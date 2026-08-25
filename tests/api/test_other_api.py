@@ -23,6 +23,7 @@ class TestAccountTransactionTemplate:
     @allure.label("qa_name", "Ruslan AQA")
     @allure.title("Перевод невозможен при недостаточном балансе")
 
+    @pytest.mark.db
     def test_accounts_transaction_template(self, db_session):
 
         with allure.step("Создание тестовых данных в базе данных: счета Stan и Bob"):
@@ -95,30 +96,37 @@ class TestAccountTransactionTemplate:
                 db_session.delete(bob)
                 db_session.commit()
 
+@allure.epic("Cinescope API")
+@allure.feature("Movies API - CRUD")
+@allure.story("Удаление фильма")
+@allure.title("Удаление фильма с проверкой в базе данных")
+@allure.severity(allure.severity_level.CRITICAL)
+@pytest.mark.crud
+@pytest.mark.db
 def test_delete_movie(super_admin, db_session, movie_factory):
-    # Создаём фильм через фабрику
-    movie = movie_factory()
-    movie_id = movie["id"]
+    with allure.step("Создать фильм через API"):
+        movie = movie_factory()
+        movie_id = movie["id"]
 
-    # Проверяем, что фильм появился в БД
-    movie_before_delete = (
-        db_session.query(MovieDBModel)
-        .filter(MovieDBModel.id == movie_id)
-        .first()
-    )
+    with allure.step("Проверить наличие фильма в БД"):
+        movie_before_delete = (
+            db_session.query(MovieDBModel)
+            .filter(MovieDBModel.id == movie_id)
+            .first()
+        )
 
-    assert movie_before_delete is not None
+        assert movie_before_delete is not None
 
-    # Удаляем фильм через API
-    response = super_admin.api.movies_api.delete_movie(movie_id)
+    with allure.step("Удалить фильм через API"):
+        response = super_admin.api.movies_api.delete_movie(movie_id)
 
-    assert response.status_code == 200
+        assert response.status_code == 200
 
-    # Проверяем, что фильм удалён из БД
-    movie_after_delete = (
-        db_session.query(MovieDBModel)
-        .filter(MovieDBModel.id == movie_id)
-        .first()
-    )
+    with allure.step("Проверить отсутствие фильма в БД"):
+        movie_after_delete = (
+            db_session.query(MovieDBModel)
+            .filter(MovieDBModel.id == movie_id)
+            .first()
+        )
 
-    assert movie_after_delete is None
+        assert movie_after_delete is None
