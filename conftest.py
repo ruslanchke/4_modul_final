@@ -1,3 +1,5 @@
+from typing import Any, Generator
+
 import requests
 import pytest
 from clients.api_manager import ApiManager
@@ -7,6 +9,9 @@ from entities.user import User
 from entities.roles import Roles
 from models.base_models import TestUser, RegisterUserResponse
 from models.base_models import TestUser as TestUserModel
+from sqlalchemy.orm import Session
+from db_requester.db_client import get_db_session
+from db_requester.db_helpers import DBHelper
 
 
 @pytest.fixture(scope="session")
@@ -87,6 +92,7 @@ def movie_factory(super_admin):
         )
 
         response = super_admin.api.movies_api.create_movie(movie_data)
+
         assert response.status_code == 201
 
         movie = response.json()
@@ -265,3 +271,33 @@ def registration_user_data():
         "passwordRepeat": random_password,
         "roles": [Roles.USER.value]
     }
+
+@pytest.fixture(scope="module")
+def db_session() -> Generator[Any, Any, None]:
+    """
+    Фикстура, которая создает и возвращает сессию для работы с базой данных
+    После завершения теста сессия автоматически закрывается
+    """
+    db_session = get_db_session()
+    yield db_session
+    db_session.close()
+
+@pytest.fixture(scope="function")
+def db_helper(db_session) -> DBHelper:
+    """
+    Фикстура для экземпляра хелпера
+    """
+    db_helper = DBHelper(db_session)
+    return db_helper
+
+@pytest.fixture(scope="function")
+def created_test_user(db_helper):
+    """
+    Фикстура, которая создает тестового пользователя в БД
+    и удаляет его после завершения теста
+    """
+    user = db_helper.create_test_user(DataGenerator.generate_user_data())
+    yield user
+    # Cleanup после теста
+    if db_helper.get_user_by_id(user.id):
+        db_helper.delete_user(user)

@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from faker import Faker
@@ -22,7 +23,7 @@ class DataGenerator:
     def generate_movie_data(
             location="SPB",
             published=True,
-            genre_id=1,
+            genre_id=5,
             price=None
     ):
         return {
@@ -39,4 +40,21 @@ class DataGenerator:
     def generate_update_movie_data():
         return {
             "name": DataGenerator.fake.catch_phrase()
+        }
+
+    @staticmethod
+    def generate_user_data() -> dict:
+        """Генерирует данные для тестового пользователя"""
+        from uuid import uuid4
+
+        return {
+            'id': f'{uuid4()}',  # генерируем UUID как строку
+            'email': DataGenerator.generate_random_email(),
+            'full_name': DataGenerator.generate_random_name(),
+            'password': DataGenerator.generate_random_password(),
+            'created_at': datetime.datetime.now(),
+            'updated_at': datetime.datetime.now(),
+            'verified': False,
+            'banned': False,
+            'roles': '{USER}'
         }
