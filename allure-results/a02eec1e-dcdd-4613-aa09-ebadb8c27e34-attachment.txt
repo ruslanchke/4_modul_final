@@ -1,0 +1,6 @@
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/register
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/login
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}

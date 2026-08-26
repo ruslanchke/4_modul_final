@@ -1,0 +1,27 @@
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/login
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}
+METHOD: POST
+URL: https://api.dev-cinescope.coconutqa.ru/movies
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTAyLCJleHAiOjE3ODc2OTYzMDJ9.2VyPU5Gwnt3ugbDsr2v3kQVEbCcVXrjGUWRilVyAoGI'}
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/user
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTAyLCJleHAiOjE3ODc2OTYzMDJ9.2VyPU5Gwnt3ugbDsr2v3kQVEbCcVXrjGUWRilVyAoGI'}
+ADMIN DATA: {'email': 'efedf1a7-8da8-433b-9db3-f343e7feedfc@example.com', 'fullName': 'Michael Yoder', 'password': 'Test1234@', 'passwordRepeat': 'Test1234@', 'roles': ['ADMIN'], 'verified': True, 'banned': False}
+CREATED USER: {'id': '71dc6958-9ac1-4e2a-8311-ae21416b9d68', 'email': 'efedf1a7-8da8-433b-9db3-f343e7feedfc@example.com', 'fullName': 'Michael Yoder', 'verified': True, 'banned': False, 'roles': ['USER'], 'createdAt': '2026-08-25T21:48:22.525Z'}
+METHOD: PATCH
+URL: https://auth.dev-cinescope.coconutqa.ru/user/71dc6958-9ac1-4e2a-8311-ae21416b9d68
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTAyLCJleHAiOjE3ODc2OTYzMDJ9.2VyPU5Gwnt3ugbDsr2v3kQVEbCcVXrjGUWRilVyAoGI'}
+UPDATED USER: {'email': 'efedf1a7-8da8-433b-9db3-f343e7feedfc@example.com', 'fullName': 'Michael Yoder', 'verified': True, 'banned': False, 'roles': ['ADMIN'], 'createdAt': '2026-08-25T21:48:22.525Z'}
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/login
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}
+METHOD: DELETE
+URL: https://api.dev-cinescope.coconutqa.ru/movies/72025
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxZGM2OTU4LTlhYzEtNGUyYS04MzExLWFlMjE0MTZiOWQ2OCIsImVtYWlsIjoiZWZlZGYxYTctOGRhOC00MzNiLTlkYjMtZjM0M2U3ZmVlZGZjQGV4YW1wbGUuY29tIiwicm9sZXMiOlsiQURNSU4iXSwidmVyaWZpZWQiOnRydWUsImlhdCI6MTc4NzY5NDUwMiwiZXhwIjoxNzg3Njk2MzAyfQ.HK0UiuTv-aTOvMKefWvzojXyLiI40aKF0V0wVOL86KI'}
+METHOD: DELETE
+URL: https://auth.dev-cinescope.coconutqa.ru/user/71dc6958-9ac1-4e2a-8311-ae21416b9d68
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTAyLCJleHAiOjE3ODc2OTYzMDJ9.2VyPU5Gwnt3ugbDsr2v3kQVEbCcVXrjGUWRilVyAoGI'}
+METHOD: DELETE
+URL: https://api.dev-cinescope.coconutqa.ru/movies/72025
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTAyLCJleHAiOjE3ODc2OTYzMDJ9.2VyPU5Gwnt3ugbDsr2v3kQVEbCcVXrjGUWRilVyAoGI'}

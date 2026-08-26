@@ -1,0 +1,21 @@
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/login
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/user
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTA0LCJleHAiOjE3ODc2OTYzMDR9.nFQAl56sedFpeirQwUFx5BaBP23GZKwfqqYTyC1XA-Q'}
+ADMIN DATA: {'email': '89ea1591-cb21-4a30-b931-26a8fdfda513@example.com', 'fullName': 'Sharon Sullivan', 'password': 'Test1234@', 'passwordRepeat': 'Test1234@', 'roles': ['ADMIN'], 'verified': True, 'banned': False}
+CREATED USER: {'id': 'f7b9972e-48a7-4e2a-9e2a-102c6e36b5c7', 'email': '89ea1591-cb21-4a30-b931-26a8fdfda513@example.com', 'fullName': 'Sharon Sullivan', 'verified': True, 'banned': False, 'roles': ['USER'], 'createdAt': '2026-08-25T21:48:25.135Z'}
+METHOD: PATCH
+URL: https://auth.dev-cinescope.coconutqa.ru/user/f7b9972e-48a7-4e2a-9e2a-102c6e36b5c7
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTA0LCJleHAiOjE3ODc2OTYzMDR9.nFQAl56sedFpeirQwUFx5BaBP23GZKwfqqYTyC1XA-Q'}
+UPDATED USER: {'email': '89ea1591-cb21-4a30-b931-26a8fdfda513@example.com', 'fullName': 'Sharon Sullivan', 'verified': True, 'banned': False, 'roles': ['ADMIN'], 'createdAt': '2026-08-25T21:48:25.135Z'}
+METHOD: POST
+URL: https://auth.dev-cinescope.coconutqa.ru/login
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json'}
+METHOD: GET
+URL: https://api.dev-cinescope.coconutqa.ru/movies/999999999
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NDk4LCJleHAiOjE3ODc2OTYyOTh9.21sshVfVfjbg9FGVjLQKq9rQ7KWXLX9myZI5DbpfMJw'}
+METHOD: DELETE
+URL: https://auth.dev-cinescope.coconutqa.ru/user/f7b9972e-48a7-4e2a-9e2a-102c6e36b5c7
+HEADERS: {'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': 'application/json', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZjcyYjhiLTYwNzEtNDZhMy1iNmM1LWJmMmNjNWY3ODcxOCIsImVtYWlsIjoiYXBpMUBnbWFpbC5jb20iLCJyb2xlcyI6WyJVU0VSIiwiQURNSU4iLCJTVVBFUl9BRE1JTiJdLCJ2ZXJpZmllZCI6dHJ1ZSwiaWF0IjoxNzg3Njk0NTA0LCJleHAiOjE3ODc2OTYzMDR9.nFQAl56sedFpeirQwUFx5BaBP23GZKwfqqYTyC1XA-Q'}
